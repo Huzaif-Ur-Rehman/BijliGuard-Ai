@@ -14,6 +14,7 @@ from inventory_engine import (
     get_tickets_dataframe,
     create_new_emergency_dispatch
 )
+from graph_engine import render_graph_card, render_project_architecture_card
 
 st.set_page_config(
     page_title="BijliGuard AI | قومی بجلی آڈٹ نیٹ ورک",
@@ -238,7 +239,7 @@ st.markdown(f"""
 # PORTAL 1: CITIZEN PUBLIC GRIEVANCE PORTAL (عوامی پورٹل)
 # =========================================================================
 if "CITIZEN" in active_portal.upper():
-    st.markdown(f"""
+    st.markdown("""
     <div class="sentinel-hero">
         <h1 style="color: #FFFFFF; margin: 0 0 6px 0; font-weight: 800; font-size: 2rem;">عوامی پورٹل — Citizen Public Grievance Desk</h1>
         <p style="color: #94A3B8; margin: 0; font-size: 0.95rem;">
@@ -448,7 +449,7 @@ if "CITIZEN" in active_portal.upper():
 # PORTAL 2: SDO SUB-DIVISION & LINE CREW OPERATIONS
 # =========================================================================
 elif "SDO" in active_portal.upper():
-    st.markdown(f"""
+    st.markdown("""
     <div class="sentinel-hero">
         <h1 style="color: #FFFFFF; margin: 0 0 6px 0; font-weight: 800; font-size: 2rem;">SDO Sub-Divisional Operations & Line Dispatch Desk</h1>
         <p style="color: #94A3B8; margin: 0; font-size: 0.95rem;">
@@ -650,6 +651,7 @@ elif "NEPRA" in active_portal.upper():
     nepra_tabs = st.tabs([
         "National Statutory Tariff Verification", 
         "VIP Political Asset Diversion Radar (The Hujra / Dera Audit)", 
+        "🕸️ Graphify: Grid Knowledge & Asset Graph",
         "Systemic 30-Day Delay Audit Analytics"
     ])
 
@@ -716,8 +718,46 @@ elif "NEPRA" in active_portal.upper():
             """, unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # Tab 3: Systemic Analytics
+    # Tab 3: Graphify Project Architecture and Grid Asset Graph
     with nepra_tabs[2]:
+        st.subheader("Graphify: Interactive Architecture & Grid Maps")
+        graph_view = st.radio(
+            "Choose a graph",
+            ["Project architecture", "Grid assets & feeders"],
+            horizontal=True,
+            key="graphify_view",
+        )
+
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+        if graph_view == "Project architecture":
+            st.write(
+                "Explore how the Streamlit interface connects to the audit, "
+                "inventory, dispute, and visualization modules and their services."
+            )
+            render_project_architecture_card()
+            st.caption(
+                "Arrows show the project's current module and service dependencies. "
+                "Drag nodes to explore; scroll to zoom."
+            )
+        else:
+            st.write(
+                "Trace the selected utility's modeled flow from its 132 kV "
+                "grid station to feeders, transformers, consumers, and hazards."
+            )
+            render_graph_card(selected_disco)
+            st.markdown("""
+            <div style="display: flex; gap: 20px; font-size: 0.82rem; margin-top: 10px; color: #8B9D98;">
+                <span>🟢 <strong>Green:</strong> Statutory / Balanced Grid</span>
+                <span>🔵 <strong>Blue:</strong> 132kV Grid Station</span>
+                <span>🟡 <strong>Yellow:</strong> 11kV Rural Feeders</span>
+                <span>⭐ <strong>Gold Star:</strong> Diverted Political Compound</span>
+                <span>🔴 <strong>Red Dot / Triangle:</strong> Overloaded 25kVA / Snapped Pole Hazard</span>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Tab 4: Systemic Analytics
+    with nepra_tabs[3]:
         st.subheader("DISCO-Wide 30-Day Billing Cycle Delay Index")
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         df_delay = pd.DataFrame([

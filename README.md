@@ -34,7 +34,9 @@ check venv activation and local configuration without printing the key.
 streamlit run src/app.py
 ```
 
-The app currently provides the five interface areas and synthetic offline
-sample data. Extraction requires a configured API key. Tariff evaluation and
-legal/audio generation are intentionally not represented as complete until
-their official source data and implementation are verified.
+The NEPRA desk includes Graphify views for project-module dependencies and a
+modeled grid topology. These visualizations are interactive; the topology is
+illustrative, not a live operational grid feed. The app also provides synthetic
+offline sample data. Extraction requires a configured API key. Tariff evaluation
+must be checked against current official notifications before legal or payment
+decisions.

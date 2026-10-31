@@ -5,3 +5,5 @@ pillow>=10.3.0
 python-dotenv>=1.0.1
 gtts>=2.5.1
 pandas>=2.2.2
+networkx>=3.2.1
+pyvis>=0.3.2

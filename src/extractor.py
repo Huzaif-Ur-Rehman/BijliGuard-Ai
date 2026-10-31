@@ -44,8 +44,12 @@ MOCK_HAZARD_EXTRACT = {
 
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
+VISION_MODEL = os.getenv("DEFAULT_VISION_MODEL", "gemini-2.5-flash")
 
-if api_key and api_key != "YOUR_GOOGLE_AI_STUDIO_API_KEY_HERE":
+if api_key and api_key.strip() not in {
+    "YOUR_GOOGLE_AI_STUDIO_API_KEY_HERE",
+    "your_gemini_api_key_here",
+}:
     genai.configure(api_key=api_key)
 
 
@@ -125,7 +129,7 @@ def extract_bill_data(image: Image.Image, use_mock: bool = False) -> BillData:
     Return ONLY pure raw JSON without markdown markers or conversational text.
     """
     try:
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel(VISION_MODEL)
         response = model.generate_content([prompt, image])
         cleaned = _clean_json_response(response.text)
         return BillData(**cleaned)
@@ -150,7 +154,7 @@ def extract_meter_reading(image: Image.Image, use_mock: bool = False) -> Physica
     }
     """
     try:
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel(VISION_MODEL)
         response = model.generate_content([prompt, image])
         cleaned = _clean_json_response(response.text)
         return PhysicalMeterData(**cleaned)
@@ -177,7 +181,7 @@ def classify_grid_hazard(image: Image.Image, use_mock: bool = False) -> HazardDa
     }
     """
     try:
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel(VISION_MODEL)
         response = model.generate_content([prompt, image])
         cleaned = _clean_json_response(response.text)
         return HazardData(**cleaned)
